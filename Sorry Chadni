@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Only For You ❤️</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff4d6d, #ff8fa3);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.2);
+    position: relative;
+    transition: 0.2s;
+}
+
+h1 {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#yes {
+    background: #ff1744;
+    color: white;
+    transition: 0.3s;
+}
+
+#yes:hover {
+    transform: scale(1.15);
+}
+
+#no {
+    background: #333;
+    color: white;
+    position: absolute;
+}
+
+.shake {
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0% { transform: translate(0px, 0px); }
+    25% { transform: translate(5px, 5px); }
+    50% { transform: translate(-5px, 5px); }
+    75% { transform: translate(5px, -5px); }
+    100% { transform: translate(0px, 0px); }
+}
+
+.heart {
+    position: fixed;
+    color: red;
+    font-size: 20px;
+    animation: float 4s linear infinite;
+    pointer-events: none; /* Make hearts unclickable */
+}
+
+@keyframes float {
+    0% {transform: translateY(100vh);}
+    100% {transform: translateY(-10vh);}
+}
+
+/* New styles for floating messages */
+.floating-message {
+    position: absolute;
+    font-size: 1.2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    opacity: 0;
+    animation: floatUp 8s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(-50vh); opacity: 0; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container" id="box">
+    <h1 id="question">Do You Love Me? ❤️</h1>
+    <button id="yes">YES ❤️</button>
+    <button id="no">NO 💔</button>
+</div>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const box = document.getElementById("box");
+const question = document.getElementById("question");
+
+const messages = [
+    "Think Again 😏",
+    "Are You Sure? 😶",
+    "Last Chance 😈",
+    "Don't Break My Heart 💔",
+    "Please Say YES 🥺"
+];
+
+let msgIndex = 0;
+
+function moveNoButton() {
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    box.classList.add("shake");
+    setTimeout(() => box.classList.remove("shake"), 300);
+
+    question.innerText = messages[msgIndex];
+    msgIndex = (msgIndex + 1) % messages.length;
+}
+
+noBtn.addEventListener("mouseover", moveNoButton);
+noBtn.addEventListener("click", moveNoButton);
+noBtn.addEventListener("touchstart", moveNoButton);
+
+const loveMessages = [
+    "You are the best thing that ever happened to me.",
+    "Every moment with you is a treasure.",
+    "My heart beats only for you, Chadni.",
+    "You complete me in every way.",
+    "Forever and always, my love.",
+    "With you, every day is Valentine's Day."
+];
+
+function createFloatingMessages() {
+    loveMessages.forEach((msg, index) => {
+        setTimeout(() => {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("floating-message");
+            messageDiv.innerText = msg;
+            messageDiv.style.left = `${Math.random() * 80 + 10}vw`; // Random horizontal position
+            messageDiv.style.animationDelay = `${index * 2}s`; // Staggered animation start
+            document.body.appendChild(messageDiv);
+
+            // Remove message after animation ends
+            messageDiv.addEventListener('animationend', () => {
+                messageDiv.remove();
+            });
+        }, index * 2000); // Stagger message creation
+    });
+}
+
+
+yesBtn.addEventListener("click", function() {
+    document.body.innerHTML = `
+    <h1 style="margin-top:20%;font-family:Arial; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+        I LOVE YOU TOO CHADNI 🥰❤️
+    </h1>
+    `;
+    
+    // Start confetti
+    let duration = 3 * 1000;
+    let end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 7,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+        });
+        confetti({
+            particleCount: 7,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+
+    // Start floating love messages
+    createFloatingMessages();
+
+    // Stop continuous heart creation (optional)
+    clearInterval(heartInterval);
+});
+
+let heartInterval; // Declare global for clearInterval
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 4000);
+}
+
+heartInterval = setInterval(createHeart, 400); // Assign to global variable
+</script>
+
+</body>
+</html>
